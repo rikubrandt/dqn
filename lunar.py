@@ -56,4 +56,6 @@ class Agent():
         self.action_memory = np.zeros(self.mem_size, dtype=np.int32)
         self.reward_memory = np.zeros(self.mem_size, dtype=np.float32)
         self.terminal_memory = np.zeros(self.mem_size, dtype=np.bool)
-        
+
+    def store_transition(self, state, action, reward, state_, done):
+        index = self.mem_count % self.mem_size # Get first memory space and wrap around.
