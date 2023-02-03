@@ -1,5 +1,5 @@
 import gymnasium as gym
-from lunar import Agent
+from dqn import Agent
 from gymnasium.envs import box2d
 #from utils import plot_learning_curve
 
