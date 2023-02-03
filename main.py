@@ -6,10 +6,10 @@ from gymnasium.envs import box2d
 import numpy as np
 
 if __name__ == "__main__":
-    env = gym.make("LunarLander-v2", render_mode="human")
+    env = gym.make("LunarLander-v2")
 
     agent = Agent(gamma=0.99, epsilon=1.0, batch_size=64, n_actions=4,
-     eps_min=0.01, input_dims=[8], lr=0.001)
+     eps_min=0.03, input_dims=[8], lr=0.001)
 
     scores, eps_history = [], []
     n_games = 500
@@ -22,6 +22,8 @@ if __name__ == "__main__":
         while not done:
             action = agent.choose_action(observation)
             observation_, reward, done, truncated, info = env.step(action)
+            if truncated:
+                observation_, info = env.reset()
             score += reward
             agent.store_transition(observation, action, reward, observation_, done)
             

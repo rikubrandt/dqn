@@ -69,9 +69,9 @@ class Agent():
         self.mem_count += 1
 
     def choose_action(self, observation):
-        # Take optimal or explor
+        # Take optimal or explore
         if np.random.random() > self.epsilon:
-            state = torch.tensor([observation]).to(self.Q_eval.device)
+            state = torch.tensor(np.array(observation)).to(self.Q_eval.device)
             actions = self.Q_eval.forward(state)
             action = torch.argmax(actions).item()
         else:
