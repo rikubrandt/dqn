@@ -57,19 +57,20 @@ class Agent():
         self.reward_memory = np.zeros(self.mem_size, dtype=np.float32)
         self.terminal_memory = np.zeros(self.mem_size, dtype=np.bool)
 
-    def store_transition(self, state, action, reward, state_, done):
+    def store_transition(self, state, action, reward, state_, terminal):
         # Get first memory space and wrap around.
         index = self.mem_count % self.mem_size
         self.state_memory[index] = state
+        self.new_state_memory[index] = state_
         self.reward_memory[index] = reward
         self.action_memory[index] = action
-        self.terminal_memory[index] = done
+        self.terminal_memory[index] = terminal
 
         self.mem_count += 1
 
     def choose_action(self, observation):
         # Take optimal or explor
-        if np.random() < self.epsilon:
+        if np.random.random() > self.epsilon:
             state = torch.tensor([observation]).to(self.Q_eval.device)
             actions = self.Q_eval.forward(state)
             action = torch.argmax(actions).item()
