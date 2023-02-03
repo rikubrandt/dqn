@@ -34,17 +34,17 @@ class DQNetwork(nn.Module):
 
 class Agent():
     def __init__(self, gamma, epsilon, lr, input_dims, batch_size, n_actions,
-     max_mem=100000, eps_end=0.01, eps_dec=5e-4):
+     max_mem=100000, eps_min=0.01, eps_dec=5e-4):
         self.gamma = gamma
         self.epsilon = epsilon
         self.lr = lr
         self.input_dims = input_dims
         self.batch_size = batch_size
         self.n_actions = n_actions
-        self.eps_end = eps_end
+        self.eps_min = eps_min
         self.eps_dec = eps_dec
 
-        self.action_space = [i for in range(n_actions)]
+        self.action_space = [i for i in range(n_actions)]
         self.mem_size = max_mem
         self.mem_count = 0
 
@@ -102,10 +102,10 @@ class Agent():
         q_target = reward_batch + self.gamma * torch.max(q_next, dim=1)[0]
 
         loss = self.Q_eval.loss(q_target, q_eval).to(self.Q_eval.device)
-
         loss.backward()
-
         self.Q_eval.optimizer.step()
+
+        self.epsilon = self.epsilon - self.eps_dec if self.epsilon > self.eps_min else self.eps_min
 
 
 
